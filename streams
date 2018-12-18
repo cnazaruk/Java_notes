@@ -1,0 +1,63 @@
+import java.util.stream.*;
+import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Test{
+    
+     public static void main(String []args){
+        long t1, t2;
+        Stream<String> streamOfString = 
+        Pattern.compile(", ").splitAsStream("a1, b3, c2, d4, e5, f2, g9");
+        
+        streamOfString
+        .map(String::toUpperCase)
+        .forEach(System.out::println);
+        
+        
+        // String to integers
+        Stream.of("a1", "a2", "a3")
+        .map(s -> s.substring(1))
+        .mapToInt(Integer::parseInt)
+        .max()
+        .ifPresent(System.out::println);
+        
+        // Match any case letters 
+        Stream.of("d2", "a2", "b1", "b3", "c")
+        .map(s -> {
+        System.out.println("map: " + s);
+        return s.toUpperCase();
+        })
+        .anyMatch(s -> {
+        System.out.println("anyMatch: " + s);
+        return s.startsWith("A");
+        });
+
+        // Parallel streams
+        List<Integer> intList = new ArrayList<Integer>();
+        for(int i=0; i<10000; i++) {
+           intList.add(i);
+        }
+        
+        // Creating A 'Sequential Stream' & Displaying The Result
+        t1 = System.currentTimeMillis();   
+        System.out.println("Sequential Stream Count?= " + intList.stream().reduce(0, Integer::sum));
+        t2 = System.currentTimeMillis();
+        System.out.println("Sequential Stream Time Taken?= " + (t2-t1) + "\n");
+        
+        // Creating A 'Parallel Stream' & Displaying The Result
+        t1 = System.currentTimeMillis();        
+        System.out.println("Parallel Stream Count?= " + intList.parallelStream().reduce(0, Integer::sum));
+        t2 = System.currentTimeMillis();
+        System.out.println("Parallel Stream Time Taken?= " + (t2-t1));
+
+        // Generating random numbers
+        Stream.generate(new Random()::nextInt).limit(5)
+        .forEach(System.out::println);
+        
+        
+     }
+     
+     
+}
